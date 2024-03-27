@@ -1,7 +1,0 @@
-version: '3.9'
-services:
-  aws20-spring-petclinic:
-    image: ${IMAGE}:${TAG}
-    container_name: spring-petclinic
-    ports:
-      - "80:8080"
