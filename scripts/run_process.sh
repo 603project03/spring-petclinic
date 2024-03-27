@@ -1,3 +1,3 @@
 #! /bin/bash
-cd /home/ec2-user
-sudo java -jar *.jar > /dev/null 2> /dev/null < /dev/null &
+cd /home/ubuntu/
+docker-compose -f /home/ubuntu/docker-compose.yml up -d --build;
