@@ -40,7 +40,7 @@ pipeline {
       
         stage('upload') {
             steps {
-                sh 'aws s3 cp build/libs/*.jar s3://project03-bucket-codedeploy/test.jar --region ap-northeast-2'
+                sh 'aws s3 cp /var/jenkins_home/workspace/test/target/*.jar s3://project03-bucket-codedeploy/test.jar --region ap-northeast-2'
             }
         }
     }
