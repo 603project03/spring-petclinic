@@ -82,7 +82,7 @@ pipeline {
         //     }
         // }
         
-        stage('Deploy to k8s'){
+        stage('Deploy to k8s') {
         withKubeConfig([credentialsId: "{EKS_JENKINS_CREDENTIAL_ID}",
                         serverUrl: "${EKS_API}",
                         clusterName: "${EKS_CLUSTER_NAME}"]){
@@ -90,7 +90,7 @@ pipeline {
             sh "aws eks --region ${REGION} update-kubeconfig --name ${EKS_CLUSTER_NAME}"
             sh "kubectl apply -f output.yaml"
             sh "rm output.yaml"
-             }
+            }
         }
     }
 }
