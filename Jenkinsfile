@@ -91,8 +91,8 @@ pipeline {
             sh "aws eks --region ${REGION} update-kubeconfig --name ${EKS_CLUSTER_NAME}"
             sh "kubectl apply -f output.yaml"
             sh "rm output.yaml"
-            }
-        }
-    }
-}
+             }
+          }
+       }
+   }
 }
