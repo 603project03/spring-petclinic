@@ -5,6 +5,7 @@ pipeline {
         jdk "jdk17"
         maven "M3"
     }
+    
     environment {
         AWS_CREDENTIAL_NAME = "AWSCredentials"
         REGION = "ap-northeast-2"
@@ -13,7 +14,7 @@ pipeline {
         ECR_DOCKER_IMAGE = "${ECR_REPOSITORY}/${DOCKER_IMAGE_NAME}"
         EKS_API = "https://20CE5E4E50D8FB55833828E944CCFBAA.gr7.ap-northeast-2.eks.amazonaws.com"
         EKS_CLUSTER_NAME = "project03-eks-cluster"
-        
+        EKS_JENKINS_CREDENTIAL_ID = "AWSCredentials"
     }
     
     stages {
@@ -32,6 +33,7 @@ pipeline {
                 }
             }
         }        
+        
         stage ('mvn Build') {
             steps {
                 sh 'mvn -Dmaven.test.failure.ignore=true install' 
@@ -42,6 +44,7 @@ pipeline {
                 }
             }
         }        
+        
         stage ('Docker Build') {
             steps {
                 dir("${env.WORKSPACE}") {
@@ -51,6 +54,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Push Docker Image to ECR') {
             steps {
                 echo "Push Docker Image to ECR"
@@ -68,13 +72,25 @@ pipeline {
                 }
             }
         }
-        stage('Clean Up Docker Images on Jenkins Server') {
-            steps {
-                echo 'Cleaning up unused Docker images on Jenkins server'
+        
+        // stage('Clean Up Docker Images on Jenkins Server') {
+        //     steps {
+        //         echo 'Cleaning up unused Docker images on Jenkins server'
 
-                // Clean up unused Docker images, including those created within the last hour
-                sh "docker image prune -f --all --filter \"until=1h\""
-            }
+        //         // Clean up unused Docker images, including those created within the last hour
+        //         sh "docker image prune -f --all --filter \"until=1h\""
+        //     }
+        // }
+        
+        stage('Deploy to k8s'){
+        withKubeConfig([credentialsId: "{EKS_JENKINS_CREDENTIAL_ID}",
+                        serverUrl: "${EKS_API}",
+                        clusterName: "${EKS_CLUSTER_NAME}"]){
+            sh "sed 's/IMAGE_VERSION/v${env.BUILD_ID}/g' service.yaml > output.yaml"
+            sh "aws eks --region ${REGION} update-kubeconfig --name ${EKS_CLUSTER_NAME}"
+            sh "kubectl apply -f output.yaml"
+            sh "rm output.yaml"
+             }
         }
     }
 }
