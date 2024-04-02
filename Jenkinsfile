@@ -8,7 +8,7 @@ pipeline {
     environment {
         AWS_CREDENTIAL_NAME = "AWSCredentials"
         REGION = "ap-northeast-2"
-        DOCKER_IMAGE_NAME="project03-spring-petclinic"
+        DOCKER_IMAGE_NAME="project03-ecr"
         ECR_REPOSITORY = "257307634175.dkr.ecr.ap-northeast-2.amazonaws.com"
         ECR_DOCKER_IMAGE = "${ECR_REPOSITORY}/${DOCKER_IMAGE_NAME}"
     }
@@ -67,13 +67,13 @@ pipeline {
                 }
             }
         }
-        // stage('Clean Up Docker Images on Jenkins Server') {
-        //     steps {
-        //         echo 'Cleaning up unused Docker images on Jenkins server'
+        stage('Clean Up Docker Images on Jenkins Server') {
+            steps {
+                echo 'Cleaning up unused Docker images on Jenkins server'
 
-        //         // Clean up unused Docker images, including those created within the last hour
-        //         sh "docker image prune -f --all --filter \"until=1h\""
-        //     }
-        // }
+                // Clean up unused Docker images, including those created within the last hour
+                sh "docker image prune -f --all --filter \"until=1h\""
+            }
+        }
     }
 }
