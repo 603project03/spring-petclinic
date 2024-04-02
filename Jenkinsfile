@@ -44,7 +44,6 @@ pipeline {
                 dir("${env.WORKSPACE}") {
                     sh """
                       docker build -t $ECR_DOCKER_IMAGE:$BUILD_NUMBER .
-                      docker tag $ECR_DOCKER_IMAGE:$BUILD_NUMBER $ECR_DOCKER_IMAGE:latest
                     """
                 }
             }
@@ -57,7 +56,6 @@ pipeline {
                     sh 'rm -f ~/.dockercfg ~/.docker/config.json || true' 
                     docker.withRegistry("https://${ECR_REPOSITORY}", "ecr:${REGION}:${AWS_CREDENTIAL_NAME}") {
                         docker.image("${ECR_DOCKER_IMAGE}:${BUILD_NUMBER}").push()
-                        docker.image("${ECR_DOCKER_IMAGE}:latest").push()
                     }
                 }
             }
