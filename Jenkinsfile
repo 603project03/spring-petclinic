@@ -11,6 +11,9 @@ pipeline {
         DOCKER_IMAGE_NAME="project03-ecr"
         ECR_REPOSITORY = "257307634175.dkr.ecr.ap-northeast-2.amazonaws.com"
         ECR_DOCKER_IMAGE = "${ECR_REPOSITORY}/${DOCKER_IMAGE_NAME}"
+        EKS_API = "https://20CE5E4E50D8FB55833828E944CCFBAA.gr7.ap-northeast-2.eks.amazonaws.com"
+        EKS_CLUSTER_NAME = "project03-eks-cluster"
+        
     }
     
     stages {
