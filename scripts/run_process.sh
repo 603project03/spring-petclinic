@@ -1,3 +1,3 @@
 #! /bin/bash
 cd /home/ubuntu/
-docker-compose -f /home/ubuntu/docker-compose.yml up -d --build;
+java -jar ./target/spring-petclinic-2.4.0.BUILD-SNAPSHOT.jar;
